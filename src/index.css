@@ -57,7 +57,7 @@ a {
   transition: var(--transition-smooth);
 }
 
-a:hover {
+a:hover, a:focus {
   color: var(--color-pop-1);
   text-decoration: underline;
 }
@@ -135,12 +135,20 @@ section {
   transform: translateX(-50%);
   animation: bounce 2s infinite;
   cursor: pointer;
+  padding: 0.5rem; /* Larger click/tap target */
+  border-radius: 50%; /* Improves appearance of focus outline on circular shapes */
+}
+
+.scroll-indicator:focus {
+  outline: 2px solid var(--color-pop-2);
+  outline-offset: 2px;
 }
 
 .scroll-indicator svg {
   width: 24px;
   height: 24px;
   fill: var(--color-text-neutral);
+  display: block; /* Remove extra space below SVG */
 }
 
 @keyframes bounce {
@@ -188,10 +196,20 @@ section {
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
-.who-knew-moment:hover {
+.who-knew-moment:hover,
+.who-knew-moment:focus {
   transform: rotate(0deg) scale(1.05);
   box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+  /* If it were focusable, ensure outline is managed or default is acceptable */
 }
+
+/* Services Section Icon Styles */
+.service-svg-icon {
+  width: 48px;
+  height: 48px;
+  /* Color is inherited from parent div's 'color' style in ServicesSection.js */
+}
+
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
@@ -218,5 +236,10 @@ section {
   .who-knew-moment {
     font-size: 1.5rem;
     padding: 1.5rem;
+  }
+
+  .service-svg-icon {
+    width: 40px;
+    height: 40px;
   }
 }
