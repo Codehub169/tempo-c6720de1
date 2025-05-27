@@ -17,7 +17,7 @@ const AnimatedLogo = () => {
   }, [visibleChars, logoText.length]);
 
   const logoStyle = {
-    fontFamily: 'var(--font-headings)', // DM Sans
+    fontFamily: 'var(--font-heading)', // DM Sans - Corrected from potential 'font-headings'
     fontSize: 'clamp(3rem, 10vw, 6rem)', // Responsive font size
     fontWeight: 'bold',
     color: 'var(--color-text-neutral)', // Soft Charcoal

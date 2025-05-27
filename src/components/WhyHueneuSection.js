@@ -13,8 +13,9 @@ const WhyHueneuSection = () => {
 
   const titleStyle = {
     fontSize: 'clamp(2.5rem, 6vw, 3.5rem)',
-    fontFamily: 'var(--font-headings)',
+    fontFamily: 'var(--font-heading)', // Corrected from potential 'font-headings'
     marginBottom: '30px',
+    // Color is inherited from sectionStyle or defaults for h2
   };
 
   const paragraphStyle = {
@@ -36,7 +37,8 @@ const WhyHueneuSection = () => {
     <section id="why-hueneu-section" style={sectionStyle} className="container">
       <h2 style={titleStyle}>Why hueneu?</h2>
       <p style={paragraphStyle}>
-        We don't just design—<span style={emphasisStyle}>we decode stories</span>.
+        We don't just design		
+—<span style={emphasisStyle}>we decode stories</span>.
       </p>
       <p style={paragraphStyle}>
         Designs that speak quietly but <span style={emphasisStyle}>stay with you</span>.

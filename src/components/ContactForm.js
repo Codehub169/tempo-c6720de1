@@ -11,6 +11,7 @@ const ContactForm = () => {
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,7 +27,7 @@ const ContactForm = () => {
     setIsSubmitted(false);
 
     // Basic validation
-    if (!formData.name || !formData.email || !formData.message) {
+    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
       setError('Please fill in all fields.');
       return;
     }
@@ -35,6 +36,7 @@ const ContactForm = () => {
         return;
     }
 
+    setIsSubmitting(true);
     try {
       // API call to backend (e.g., /api/contact)
       const response = await fetch('/api/contact', {
@@ -49,12 +51,14 @@ const ContactForm = () => {
         setIsSubmitted(true);
         setFormData({ name: '', email: '', message: '' }); // Reset form
       } else {
-        const errorData = await response.json();
+        const errorData = await response.json().catch(() => ({ message: 'Failed to parse error response from server.'})); // Handle non-JSON error responses
         setError(errorData.message || 'Failed to send message. Please try again.');
       }
     } catch (err) {
       console.error('Contact form submission error:', err);
       setError('An unexpected error occurred. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -68,7 +72,7 @@ const ContactForm = () => {
 
   const titleStyle = {
     fontSize: 'clamp(2.5rem, 6vw, 3.5rem)',
-    fontFamily: 'var(--font-headings)',
+    fontFamily: 'var(--font-heading)', // Corrected from potential 'font-headings'
     color: 'var(--color-text-neutral)',
     marginBottom: '40px',
     textAlign: 'center',
@@ -113,16 +117,16 @@ const ContactForm = () => {
     resize: 'vertical',
   };
 
-  const buttonStyle = {
+  const baseButtonStyle = {
     backgroundColor: 'var(--color-pop-1)', // Tomato pop color
     color: '#ffffff',
     border: 'none',
     padding: '15px 25px',
     borderRadius: '4px',
-    fontFamily: 'var(--font-headings)',
+    fontFamily: 'var(--font-heading)', // Corrected from potential 'font-headings'
     fontSize: '1.1rem',
     cursor: 'pointer',
-    transition: 'background-color 0.3s ease',
+    transition: 'background-color 0.3s ease, opacity 0.3s ease',
     display: 'block',
     width: '100%',
     marginTop: '10px',
@@ -130,6 +134,13 @@ const ContactForm = () => {
   
   const buttonHoverStyle = {
       backgroundColor: 'var(--color-pop-2)', // Steel Blue on hover
+  };
+
+  const [isButtonHovered, setIsButtonHovered] = useState(false);
+  const currentButtonStyle = {
+      ...baseButtonStyle,
+      ...(isButtonHovered ? buttonHoverStyle : {}),
+      ...(isSubmitting ? { opacity: 0.7, cursor: 'not-allowed' } : {}),
   };
 
   const instagramLinkStyle = {
@@ -171,23 +182,24 @@ const ContactForm = () => {
       <form onSubmit={handleSubmit} style={formStyle} noValidate>
         <div style={inputGroupStyle}>
           <label htmlFor="name" style={labelStyle}>Your Name</label>
-          <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} style={inputStyle} required />
+          <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} style={inputStyle} required aria-required="true" disabled={isSubmitting} />
         </div>
         <div style={inputGroupStyle}>
           <label htmlFor="email" style={labelStyle}>Your Email</label>
-          <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} style={inputStyle} required />
+          <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} style={inputStyle} required aria-required="true" disabled={isSubmitting} />
         </div>
         <div style={inputGroupStyle}>
           <label htmlFor="message" style={labelStyle}>Your Story (or message)</label>
-          <textarea id="message" name="message" value={formData.message} onChange={handleChange} style={textareaStyle} required />
+          <textarea id="message" name="message" value={formData.message} onChange={handleChange} style={textareaStyle} required aria-required="true" disabled={isSubmitting} />
         </div>
-        <button type="submit" style={buttonStyle} 
-                onMouseEnter={e => e.currentTarget.style.backgroundColor = buttonHoverStyle.backgroundColor}
-                onMouseLeave={e => e.currentTarget.style.backgroundColor = buttonStyle.backgroundColor}>
-          Let's design your story
+        <button type="submit" style={currentButtonStyle} 
+                onMouseEnter={() => setIsButtonHovered(true)}
+                onMouseLeave={() => setIsButtonHovered(false)}
+                disabled={isSubmitting}>
+          {isSubmitting ? 'Sending...' : "Let's design your story"}
         </button>
-        {error && <p style={errorMessageStyle}>{error}</p>}
-        {isSubmitted && <p style={successMessageStyle}>Thank you! Your story is on its way to us.</p>}
+        {error && <p style={errorMessageStyle} role="alert">{error}</p>}
+        {isSubmitted && <p style={successMessageStyle} role="alert">Thank you! Your story is on its way to us.</p>}
       </form>
       <div style={instagramLinkStyle}>
         <p>Find us on Instagram: <a href="https://instagram.com/hueneu_" target="_blank" rel="noopener noreferrer" style={instagramAnchorStyle}>@hueneu_</a></p>
