@@ -111,21 +111,32 @@ section {
   text-align: center;
   background-color: var(--color-bg-neutral);
   position: relative; /* For scroll indicator positioning */
+  padding: 2rem; /* Add some padding for smaller screens */
 }
 
 .hero-section .tagline {
-  font-size: 2.5rem;
-  font-weight: 500;
-  margin-top: 2rem;
-  margin-bottom: 0.5rem;
+  font-size: clamp(2.8rem, 7vw, 4rem); /* Larger and responsive */
+  font-weight: 700; /* Bolder */
+  margin-top: 2.5rem; /* Slightly more space from logo */
+  margin-bottom: 1rem; /* More space before subtext */
   color: var(--color-text-neutral);
+  line-height: 1.2; /* Ensure good line height for potentially wrapping text */
+  text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.08); /* Subtle depth, slightly less opaque */
+  max-width: 90%; /* Ensure it doesn't hit container edges on medium screens */
+  margin-left: auto; /* Center the block if max-width is applied */
+  margin-right: auto; /* Center the block if max-width is applied */
 }
 
 .hero-section .subtext {
-  font-size: 1.25rem;
+  font-size: clamp(1.2rem, 4vw, 1.5rem); /* Slightly larger and responsive */
   color: var(--color-secondary-neutral);
   font-weight: 300;
-  max-width: 500px;
+  max-width: 600px; /* Allow slightly wider for better flow with larger tagline */
+  line-height: 1.7; /* Improved readability */
+  margin-top: 0; /* Tagline's margin-bottom handles spacing above */
+  margin-bottom: 3rem; /* More space before scroll indicator */
+  margin-left: auto; /* Center the block */
+  margin-right: auto; /* Center the block */
 }
 
 .scroll-indicator {
@@ -217,13 +228,11 @@ section {
     padding: 3rem 1rem;
   }
 
-  .hero-section .tagline {
-    font-size: 2rem;
-  }
-
-  .hero-section .subtext {
-    font-size: 1.1rem;
-  }
+  /* 
+    Font sizes for .hero-section .tagline and .hero-section .subtext 
+    are now handled by clamp() in their main definitions. 
+    Specific overrides here are removed to allow clamp() to function as intended.
+  */
 
   .story-section h2 {
     font-size: 2.2rem;
